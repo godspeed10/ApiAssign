@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <form action="http://127.0.0.1:5000/api" method="POST">
     <input type="text" name="hello" id= "hello" placeholder="input">
-    <button onclick="sendJSON()">send</button>
+    <input type="submit">
   </form>
-<script>
+<!-- <script>
     function sendJSON(){
 
 let input = document.querySelector('#hello');
@@ -33,6 +33,6 @@ var data = JSON.stringify({ "payload": input.value });
 
 // Sending data with the request
 xhr.send(data);
-    }
-</script>
+    } -->
+<!-- </script> -->
 </html>

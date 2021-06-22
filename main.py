@@ -1,24 +1,45 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 from flask import request
+from flask_mysqldb import MySQL
 import random
 
-
-from flask import Flask
 app = Flask(__name__)
+ 
+app = Flask(__name__)
+app.config['MYSQL_HOST'] = '127.0.0.1'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'flaskapi'
+ 
+mysql = MySQL(app)
 
-@app.route('/api', methods=['POST'])
-def hello_world():
-    name = request.form.get("hello")
-    print(name)
-    # inp = name["payload"]
-    ans = ["sanitized", "unsanitized"]
-    return jsonify({"result" : random.choice(ans)})
-    # return request.json
-    # print(jsonify(answer))
-
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
     return render_template("input.html")
+
+name = 2
+@app.route('/api', methods=['GET','POST'])
+def hello_world():
+    if request.method == 'POST':
+        name = request.form['hello']
+        cur = mysql.connection.cursor()
+        cur.execute("select * from name where Name=(%s)", [name])
+        fet = cur.fetchone()
+        if fet == None:
+            cur.execute("INSERT INTO name(Name) VALUES (%s)",[name])
+            mysql.connection.commit()
+            cur.close()
+            return jsonify({"result" : "sanitized"})
+        else:
+            cur.close()
+            return jsonify({"result" : "unsanitized"})
+
+    return render_template("input.html")
+    # inp = name["payload"]
+    # ans = ["sanitized", "unsanitized"]
+    # return jsonify({"result" : random.choice(ans)})
+    # # return request.json
+    # print(jsonify(answer))
 
 
 if __name__ == "__main__":
