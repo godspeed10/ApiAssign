@@ -19,9 +19,9 @@ def home():
 
 name = 2
 @app.route('/api', methods=['GET','POST'])
-def hello_world():
+def diff():
     if request.method == 'POST':
-        name = request.form['hello']
+        name = request.args.get('hello')           ##changed it from request.form('hello') to  request.args.get('hello')  as we are using postman now
         cur = mysql.connection.cursor()
         cur.execute("select * from name where Name=(%s)", [name])
         fet = cur.fetchone()
@@ -35,6 +35,7 @@ def hello_world():
             return jsonify({"result" : "unsanitized"})
 
     return render_template("input.html")
+   
     # inp = name["payload"]
     # ans = ["sanitized", "unsanitized"]
     # return jsonify({"result" : random.choice(ans)})
